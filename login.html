@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trustfall - Login</title>
+    <script src="https://npmcdn.com/parse/dist/parse.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background: #f5f7fa;
+            background-image: 
+                radial-gradient(circle at 25px 25px, #c3cfe2 2%, transparent 0%),
+                radial-gradient(circle at 75px 75px, #c3cfe2 2%, transparent 0%);
+            background-size: 100px 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .home-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: #4a90e2;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .home-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .login-container {
+            background: white;
+            max-width: 400px;
+            width: 90%;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Rest of the styles remain the same */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            border-color: #4a90e2;
+            outline: none;
+            transform: scale(1.02);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            color: #e73c7e;
+            display: none;
+            text-align: center;
+            margin-bottom: 15px;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        label {
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <a href="trustfall.html" class="home-button">Return Home</a>
+    <div class="login-container">
+        <h2>Sign In to Trustfall</h2>
+        <div id="error" class="error-message">Invalid username or password</div>
+        <form id="loginForm" onsubmit="return handleLogin(event)">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" required autocomplete="username">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required autocomplete="current-password">
+            </div>
+            <button type="submit" class="login-btn">Sign In</button>
+        </form>
+    </div>
+
+    <script>
+        Parse.initialize("YXcizKFdARiRgWUDiwy8ugFuO4pGNlTAODQHcuP6", "hkmMtFrsamGv5XezXXRTlPfv2IAczJ0k7qygEc5s");
+        Parse.serverURL = 'https://parseapi.back4app.com/';
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const user = await Parse.User.logIn(username, password);
+                window.location.href = '/user_dashboard.html';
+            } catch (error) {
+                const errorEl = document.getElementById('error');
+                errorEl.style.display = 'block';
+                errorEl.style.animation = 'none';
+                errorEl.offsetHeight;
+                errorEl.style.animation = null;
+                console.error('Error:', error);
+            }
+        }
+    </script>
+</body>
+</html>
