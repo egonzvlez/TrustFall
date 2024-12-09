@@ -47,9 +47,7 @@ trustfall/
 ├── html/
 │   ├── trustfall.html    # Landing page
 │   ├── login.html        # Authentication page
-│   └── user_dashboard.html # User interface
-├── css/                  # Stylesheets
-├── js/                   # JavaScript files
+│   └── user_dashboard.html # User interface           
 └── schemas/
     └── _User.json        # Back4App user schema
 ```
