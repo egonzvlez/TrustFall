@@ -525,8 +525,8 @@
                 console.error(error);
             }
         }
+        let trackingInterval = null;
 
-        // Location Tracking
         async function startTracking(trackingKey) {
             try {
                 // Query for user with the tracking key (objectId)
@@ -538,36 +538,6 @@
                     throw new Error('Invalid tracking key or user not found');
                 }
 
-                // Set up live query subscription for the user
-                const subscription = await userQuery.subscribe();
-                
-                // Handle initial location if exists
-                const initialLocation = targetUser.get('location');
-                if (initialLocation) {
-                    updateLocation({
-                        latitude: initialLocation.latitude,
-                        longitude: initialLocation.longitude,
-                        timestamp: targetUser.get('updatedAt'),
-                        userName: `${targetUser.get('firstName')} ${targetUser.get('lastName')}`
-                    });
-                }
-
-                // Handle real-time updates
-                subscription.on('update', (user) => {
-                    const location = user.get('location');
-                    if (location) {
-                        updateLocation({
-                            latitude: location.latitude,
-                            longitude: location.longitude,
-                            timestamp: user.get('updatedAt'),
-                            userName: `${user.get('firstName')} ${user.get('lastName')}`
-                        });
-                    }
-                });
-
-                // Save the subscription for cleanup
-                trackingSubscription = subscription;
-
                 // Update UI to show tracking is active
                 isTracking = true;
                 document.getElementById('statusDot').classList.remove('inactive');
@@ -575,6 +545,14 @@
                 document.getElementById('statusText').textContent = 'Tracking active';
                 document.getElementById('trackButton').textContent = 'Stop Tracking';
                 document.getElementById('locationDetails').style.display = 'block';
+
+                // Initial location update
+                updateUserLocation(trackingKey);
+
+                // Set up interval to fetch location every 10 seconds
+                trackingInterval = setInterval(() => {
+                    updateUserLocation(trackingKey);
+                }, 10000); // 10000 milliseconds = 10 seconds
 
                 // Show success message
                 showSuccess(`Now tracking ${targetUser.get('firstName')}'s location`);
@@ -585,11 +563,30 @@
             }
         }
 
-        // Stop tracking
+        async function updateUserLocation(trackingKey) {
+            try {
+                const userQuery = new Parse.Query(Parse.User);
+                userQuery.equalTo('objectId', trackingKey);
+                const user = await userQuery.first();
+                
+                if (user) {
+                    updateLocation({
+                        latitude: user.get('currLat'),
+                        longitude: user.get('currLong'),
+                        timestamp: user.get('updatedAt'),
+                        userName: `${user.get('firstName')} ${user.get('lastName')}`
+                    });
+                }
+            } catch (error) {
+                console.error('Error updating location:', error);
+            }
+        }
+
         function stopTracking() {
-            if (trackingSubscription) {
-                trackingSubscription.unsubscribe();
-                trackingSubscription = null;
+            // Clear the interval if it exists
+            if (trackingInterval) {
+                clearInterval(trackingInterval);
+                trackingInterval = null;
             }
 
             isTracking = false;
