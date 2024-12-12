@@ -19,6 +19,7 @@ Trustfall is a web-based safety application that provides location sharing capab
 - Maps Integration: Google Maps API
 
 ## Setup Instructions
+- Run locally. 
 
 ### Prerequisites
 - Back4App account
@@ -57,6 +58,3 @@ trustfall/
 - Location data only shared during active tracking
 - Privacy-first approach to personal data
 - Friend-based access control
-
-## License
-This project is licensed under the MIT License - see the LICENSE file for details.
