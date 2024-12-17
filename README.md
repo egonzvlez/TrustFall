@@ -58,3 +58,9 @@ trustfall/
 - Location data only shared during active tracking
 - Privacy-first approach to personal data
 - Friend-based access control
+
+## Starting Location Tracking
+- Access the dashboard
+- Enter tracking ID provided by mobile application and click the "start tracking" button
+- Verify connection
+- View Location-- map will automatically center on the tracked user's location
